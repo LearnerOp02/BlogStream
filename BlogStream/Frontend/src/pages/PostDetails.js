@@ -1,71 +1,105 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
+import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
+import Comment from '../components/Comment';
 
 const PostDetails = () => {
+  const { id: postId } = useParams();
+  const [post, setPost] = useState({});
+  const [comments, setComments] = useState([]);
+  const [comment, setComment] = useState("");
+  const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  const fetchPost = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/${postId}`);
+      setPost(res.data);
+    } catch (err) {
+      console.log('Error fetching post:', err);
+    }
+  };
+
+  const fetchPostComments = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8000/api/post/${postId}`);
+      setComments(res.data);
+    } catch (err) {
+      console.log('Error fetching comments:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+    fetchPostComments();
+  }, [postId]);
+
+  const handleDeletePost = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/api/${postId}`);
+      navigate("/");
+    } catch (err) {
+      console.log('Error deleting post:', err);
+    }
+  };
+
+  const postComment = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("http://localhost:8000/api/create/comment", {
+        comment,
+        username: user.username,
+        postId,
+        userId: user._id
+      });
+      setComment("");
+      fetchPostComments();  // Refresh comments after posting
+    } catch (err) {
+      console.log('Error posting comment:', err);
+    }
+  };
+
   return (
     <div className="container mt-5">
-      <div className="d-flex justify-content-between align-items-center">
-        <h1 className="display-4 text-dark">Future of Coding</h1>
-        <div className="d-flex align-items-center">
-          <button className="btn btn-link text-secondary">
-            <BiEdit size={24} />
-          </button>
-          <button className="btn btn-link text-secondary">
-            <MdDelete size={24} />
-          </button>
-        </div>
+    <div className="d-flex justify-content-between align-items-center">
+      <h1 className="display-4" style={{ fontWeight: 'bold', fontFamily: 'Georgia, serif' }}>{post.title}</h1>
+      <div className="d-flex align-items-center">
+        <button onClick={() => navigate(`/edit/${postId}`)} className="btn btn-outline-primary mx-1" style={{ fontSize: '1.2rem' }}>
+          <BiEdit size={24} />
+        </button>
+        <button onClick={handleDeletePost} className="btn btn-outline-danger mx-1" style={{ fontSize: '1.2rem' }}>
+          <MdDelete size={24} />
+        </button>
       </div>
-      <div className="d-flex justify-content-between mt-2">
-        <p className="text-muted">@pranitaher</p>
-        <p className="text-muted">12-06-24</p>
-      </div>
-      <img
-        src="https://tse2.mm.bing.net/th?id=OIP.YsEPA7fZ0516aowp79LtgQHaES&pid=Api&P=0&h=180"
-        className="img-fluid mt-4 rounded shadow"
-        alt="Post Cover"
-      />
-      <p className="mt-4 text-justify lead text-dark">
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-        standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-        make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-        typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-        PageMaker including versions of Lorem Ipsum.
-      </p>
-      <div className="d-flex align-items-center mt-4">
-        <p className="font-weight-bold ">Categories:</p>
-        <div className="d-flex ml-2 mt-0">
-          <span className="badge badge-secondary mr-2">Tech</span>
-          <span className="badge badge-secondary">AI</span>
-        </div>
-      </div>
+    </div>
+    <div className="d-flex justify-content-between mt-2">
+      <p className="text-muted" style={{ fontSize: '1rem', fontStyle: 'italic' }}>@{post.username}</p>
+      <p className="text-muted" style={{ fontSize: '1rem', fontStyle: 'italic' }}>{new Date(post.updatedAt).toDateString()}</p>
+    </div>
+    <img
+      src={post.photo ? `http://localhost:8000/images/${post.photo}` : 'http://localhost:8000/images/default.jpg'}
+      className="img-fluid mt-4 rounded shadow-lg"
+      alt="Post"
+    />
+    <p className="mt-4" style={{ fontSize: '1.2rem', lineHeight: '1.7', fontFamily: 'Georgia, serif' }}>{post.description}</p>
       <div className="mt-5">
-        <h2 className="h4 font-weight-bold mb-3">Comments</h2>
-        {[1, 2].map((comment, index) => (
-          <div key={index} className="p-3 bg-light rounded mb-3 shadow-sm">
-            <div className="d-flex justify-content-between align-items-center">
-              <h3 className="h6 font-weight-bold text-dark">@pranitaher</h3>
-              <div className="d-flex align-items-center">
-                <p className="text-muted mt-3 mr-2">12-06-24</p>
-                <button className="btn btn-link text-secondary">
-                  <BiEdit size={16} />
-                </button>
-                <button className="btn btn-link text-secondary">
-                  <MdDelete size={16} />
-                </button>
-              </div>
-            </div>
-            <p className="mt-0 text-dark">Nice info</p>
-          </div>
+        <h2 className="h4 font-weight-bold mb-3" style={{ fontFamily: 'Georgia, serif' }}>Comments</h2>
+        {comments?.map((c) => (
+          <Comment key={c._id} c={c} post={post} fetchPostComments={fetchPostComments} />
         ))}
         <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center mt-4 mb-4">
           <input
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
             className="form-control mr-md-2 mb-2 mb-md-0"
             type="text"
             placeholder="Write a comment"
+            style={{ borderRadius: '30px', padding: '0.75rem 1.5rem' }}
           />
-          <button type="button" class="btn btn-primary">Add</button>
+          <button onClick={postComment} type="button" className="btn btn-primary" style={{ borderRadius: '30px', padding: '0.75rem 2rem' }}>Add</button>
         </div>
       </div>
     </div>

@@ -26,7 +26,7 @@ const PostDetails = () => {
 
   const fetchPostComments = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/comments/${postId}`);
+      const res = await axios.get(`http://localhost:8000/api/post/${postId}`);
       setComments(res.data);
     } catch (err) {
       console.log('Error fetching comments:', err);

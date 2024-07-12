@@ -14,16 +14,6 @@ exports.createcomment = (verifyToken, async (req, res) => {
     }
 })
 
-//Update
-exports.updatecomment = (verifyToken, async (req, res) => {
-    try {
-        const updatedComment = await Comment.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
-        res.status(200).json(updatedComment);;
-    }
-    catch (err) {
-        res.status(500).json(err);
-    }
-})
 
 //Delete
 exports.deletecomment = (verifyToken, async (req, res) => {

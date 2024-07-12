@@ -42,7 +42,7 @@ exports.delete =( verifyToken, async (req, res) => {
 //Post details
 exports.postdetails = async (req, res) => {
     try {
-        const post = await Post.findById(req.params._id);
+        const post = await Post.findById(req.params.id);
         res.status(200).json(post);
     } catch (err) {
         res.status(500).json(err);

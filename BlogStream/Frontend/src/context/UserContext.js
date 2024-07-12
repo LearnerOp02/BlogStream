@@ -21,8 +21,14 @@ export default function UserContextProvider({ children }) {
     }
   };
 
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token'); 
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUserMethod }}>
+    <UserContext.Provider value={{ user, setUserMethod, logout }}>
       {children}
     </UserContext.Provider>
   );

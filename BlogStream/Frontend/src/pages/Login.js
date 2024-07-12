@@ -1,7 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { UserContext } from '../context/UserContext'; // Ensure this is the correct import
+import { UserContext } from '../context/UserContext'; 
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -19,14 +20,14 @@ const Login = () => {
         }
       });
       if (res.status === 200) {
-        setUserMethod(res.data); // Assuming res.data contains user info and/or token
+        setUserMethod(res.data); 
         navigate("/");
+        toast.success("Login successful");
       } else {
-        setError(true); // Handle unexpected status codes
+        setError(true);
       }
     } catch (err) {
-      setError(true); // Handle errors such as 401 Unauthorized
-      console.log(err);
+      toast.error("Error while login");
     }
   };
 

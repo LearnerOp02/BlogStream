@@ -1,16 +1,16 @@
 import { useContext } from 'react';
 import React from 'react';
-import { Link , useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
 const Navbar = () => {
-  const navigate=useNavigate()
-    const {user}=useContext(UserContext)
+  const navigate = useNavigate();
+  const { user } = useContext(UserContext);
 
   return (
     <nav className='navbar navbar-expand-md navbar-light bg-light shadow-lg rounded' style={{ padding: '10px 20px' }}>
       <div className='container-fluid'>
-        <Link to='/' className='navbar-brand font-weight-bold text-dark' style={{ fontSize: '1.8rem', marginLeft: '20px', marginRight: '20px' }}>
+        <Link to='/' className='navbar-brand text-dark' style={{ fontSize: '1.8rem', marginLeft: '20px', marginRight: '20px', fontWeight: 'bold' }}>
           Blog Stream
         </Link>
         <button className='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarNav' aria-controls='navbarNav' aria-expanded='false' aria-label='Toggle navigation'>
@@ -30,13 +30,13 @@ const Navbar = () => {
             <li className='nav-item'>
               <Link to='/contactus' className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Contact Us</Link>
             </li>
-            {user? (
+            {user ? (
               <>
                 <li className='nav-item'>
                   <Link to='/write' className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Write</Link>
                 </li>
                 <li className='nav-item'>
-                  <Link to='/profile/:id' className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Profile</Link>
+                  <Link to={`/profile/${user.id}`} className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Profile</Link>
                 </li>
               </>
             ) : (

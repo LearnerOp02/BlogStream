@@ -75,8 +75,8 @@ const AboutUs = () => {
             Passionate about writing or eager to make your voice heard? We are always looking for new contributors to join our team. Get in touch if you’re interested in being a part of Blog Stream!
           </p>
           <Link
-          to='/contactus'
-            className="btn btn-primary btn-lg"
+            to='/contactus'
+            className='btn btn-primary btn-lg'
             style={{ backgroundColor: '#2b6cb0', borderColor: '#2b6cb0', padding: '12px 24px', fontSize: '1.2rem', borderRadius: '30px' }}
           >
             Contact Us

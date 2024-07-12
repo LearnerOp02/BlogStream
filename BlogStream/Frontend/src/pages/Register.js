@@ -1,31 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from "react";
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const Register = () => {
-  const [username, setUsername] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState(false)
-  const navigate = useNavigate()
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8000/api/register", { username, email, password })
-      setUsername("")
-      setEmail("")
-      setPassword("")
-      setError(false)
-      navigate('/login')
+      const res = await axios.post("http://localhost:8000/api/register", { username, email, password });
+      setUsername("");
+      setEmail("");
+      setPassword("");
+      setError(false);
+      toast.success("Registration successful");
+      navigate('/login');
+    } catch (error) {
+      setError(true);
+      toast.error("Error while registering.");
+      console.log(error);
     }
-    catch (error) {
-      setError(true)
-      console.log(error)
-    }
-  }
+  };
 
   return (
     <div className='container-fluid min-vh-100 d-flex justify-content-center align-items-center' style={{ backgroundColor: '#eef2f7' }}>
@@ -37,7 +38,6 @@ const Register = () => {
               onChange={(e) => setUsername(e.target.value)}
               className='form-control'
               type='text'
-              name='username'
               placeholder='Username'
               value={username}
               required
@@ -49,7 +49,6 @@ const Register = () => {
               onChange={(e) => setEmail(e.target.value)}
               className='form-control'
               type='email'
-              name='email'
               placeholder='Email'
               value={email}
               required
@@ -61,7 +60,6 @@ const Register = () => {
               onChange={(e) => setPassword(e.target.value)}
               className='form-control'
               type='password'
-              name='password'
               placeholder='Password'
               value={password}
               required
@@ -75,7 +73,7 @@ const Register = () => {
           >
             Register
           </button>
-          {error && <h3 className="text-red-500 text-sm ">Something went wrong</h3>}
+          {error && <h3 className='text-danger text-sm mt-3'>Something went wrong</h3>}
         </form>
         <div className='text-center mt-4'>
           <p className='text-muted'>Already have an account? <Link to='/login' className='text-primary' style={{ textDecoration: 'none', fontWeight: 'bold' }}>Login</Link></p>

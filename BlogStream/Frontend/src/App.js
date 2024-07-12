@@ -32,7 +32,7 @@ function App() {
           <Route exact path='/write' element={<CreatePost />} />
           <Route exact path='/posts/post/:id' element={<PostDetails />} />
           <Route exact path='/edit/:id' element={<EditPost />} />
-          <Route exact path='/profile/:id' element={<Profile />} />
+          <Route exact path='/profile/:_id' element={<Profile />} />
           <Route exact path='/blogs' element={<Blogs />} />
           <Route exact path='/aboutus' element={<AboutUs />} />
           <Route exact path='/contactus' element={<ContactUs />} />

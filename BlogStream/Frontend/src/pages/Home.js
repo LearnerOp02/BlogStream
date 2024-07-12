@@ -1,22 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
 import HomePost from '../components/HomePost';
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
+  const { search } = useLocation();
+  const [posts, setPosts] = useState([]); // Changed `post` to `posts`
+  const { user } = useContext(UserContext);
+
+  const fetchPosts = async () => {
+    try {
+      console.log(search);
+      const res = await axios.get(`http://localhost:8000/api/all/posts`);
+      setPosts(res.data); // Changed `setPost` to `setPosts`
+      console.log(res.data);
+    } catch (err) {
+      console.log('Error fetching posts:', err);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await axios.get('http://localhost:8000/api${postId}');
-        console.log('Fetched Posts:', res.data); // Add this line
-        setPosts(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchPosts();
-  }, []);
+  }, [search]);
 
   return (
     <div className='container-fluid py-5' style={{ backgroundColor: '#f0f2f5', minHeight: '100vh', padding: '0 10%' }}>

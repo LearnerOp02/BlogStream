@@ -36,7 +36,7 @@ const Navbar = () => {
                   <Link to='/write' className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Write</Link>
                 </li>
                 <li className='nav-item'>
-                  <Link to={`/profile/${user.id}`} className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Profile</Link>
+                  <Link to={`/profile/${user._id}`} className='nav-link text-dark' style={{ margin: '0 15px', fontWeight: '500' }}>Profile</Link>
                 </li>
               </>
             ) : (

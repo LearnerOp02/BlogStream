@@ -4,7 +4,6 @@ import { MdDelete } from 'react-icons/md';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Comment from '../components/Comment';
-import { IF } from './url';
 
 const PostDetails = () => {
   const { id: postId } = useParams();
@@ -19,6 +18,7 @@ const PostDetails = () => {
     try {
       const res = await axios.get(`http://localhost:8000/api/${postId}`);
       setPost(res.data);
+      console.log(res.data);
     } catch (err) {
       console.log('Error fetching post:', err);
     }
@@ -41,7 +41,7 @@ const PostDetails = () => {
   const handleDeletePost = async () => {
     try {
       await axios.delete(`http://localhost:8000/api/${postId}`);
-      navigate("/");
+      navigate("/write");
     } catch (err) {
       console.log('Error deleting post:', err);
     }
@@ -81,7 +81,7 @@ const PostDetails = () => {
         <p className="text-muted" style={{ fontSize: '1rem', fontStyle: 'italic' }}>{new Date(post.updatedAt).toDateString()}</p>
       </div>
       <img
-        src={IF + post.photo}
+        src={post.photo}
         className="img-fluid mt-4 rounded shadow-lg"
         alt="Post"
       />

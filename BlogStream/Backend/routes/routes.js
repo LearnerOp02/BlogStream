@@ -5,7 +5,7 @@ const { createcomment, deletecomment, postcomment } = require('../controller/com
 const { updateuser, deleteuser, user } = require('../controller/user');
 const verifyToken = require('../verifyToken');
 const router = express.Router();
-
+router.get('/all/posts', getAllPosts);
 //auth routes
 router.post('/register', register);
 router.post('/login', login);
@@ -22,8 +22,8 @@ router.post('/create',create)
 router.put('/:id', update);
 router.delete('/:id', deletePost);
 router.get('/:id', postdetails);
-router.get('/user/:userId', userposts);
-router.get('/posts/:id', getAllPosts);
+router.get('/user/:id', userposts);
+
 
 //comment routes
 router.post('/create/comment', createcomment);

@@ -5,11 +5,27 @@ import { MdOutlineLogout, MdDelete } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { toast } from 'react-toastify';
+import ProfilePost from '../components/ProfilePost';
 
 const Profile = () => {
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   const { logout } = useContext(UserContext);
   const [user, setUser] = useState({});
+
+  const fetchPosts = async () => {
+    try {
+      const res = await axios.get('http://localhost:8000/api/all/posts');
+      setPosts(res.data);
+      console.log(res.data);
+    } catch (err) {
+      console.log('Error fetching posts:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user'));
@@ -22,11 +38,10 @@ const Profile = () => {
     try {
       await axios.get('http://localhost:8000/api/logout');
       logout();
-      toast.success("User logout successfully")
+      toast.success("User logged out successfully");
       navigate('/login');
     } catch (err) {
-      
-      toast.error("Error while logging out")
+      toast.error("Error while logging out");
       console.log(err);
     }
   };
@@ -42,10 +57,10 @@ const Profile = () => {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       setUser(null);
-      toast.success("User deleted account successfully")
+      toast.success("User deleted account successfully");
       navigate('/register');
     } catch (err) {
-      toast.error("Error while deleting the account")
+      toast.error("Error while deleting the account");
       console.log(err);
     }
   };
@@ -92,18 +107,9 @@ const Profile = () => {
             <div className='card-body'>
               <h5 className='card-title text-dark mb-4'>Recent Posts</h5>
               <ul className='list-group list-group-flush'>
-                {user.recentPosts && user.recentPosts.length > 0 ? (
-                  user.recentPosts.map((post, index) => (
-                    <li key={index} className='list-group-item d-flex justify-content-between align-items-center'>
-                      <a href={`/post/${post.id}`} className='text-primary fw-bold' style={{ textDecoration: 'none' }}>
-                        {post.title}
-                      </a>
-                      <p className='text-muted mb-0'>{new Date(post.date).toLocaleDateString()}</p>
-                    </li>
-                  ))
-                ) : (
-                  <li className='list-group-item text-center text-muted'>No recent posts available.</li>
-                )}
+                {posts.map((post) => (
+                  <ProfilePost key={post._id} post={post} />
+                ))}
               </ul>
             </div>
           </div>

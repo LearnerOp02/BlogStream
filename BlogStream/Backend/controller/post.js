@@ -53,29 +53,53 @@ exports.postdetails = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
     try {
         const posts = await Post.find({});
-        
+
         // Log each post's _id to identify the issue
         posts.forEach(post => {
-          console.log('Post ID:', post._id);
-          if (!mongoose.Types.ObjectId.isValid(post._id)) {
-            console.error('Invalid ObjectId found:', post._id);
-          }
+            console.log('Post ID:', post._id);
+            if (!mongoose.Types.ObjectId.isValid(post._id)) {
+                console.error('Invalid ObjectId found:', post._id);
+            }
         });
         res.json(posts);
-      } catch (error) {
+    } catch (error) {
         console.error('Error fetching posts:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-    };
-
-//User post
-exports.userposts = async (req, res) => {
-    try {
-        const posts = await Post.find({ userId: req.params.userId });
-        res.status(200).json(posts);
-    } catch (err) {
-        res.status(500).json(err);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+// User posts
+exports.userPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({ userId: req.params.userId })
+        res.status(200).json(posts)
+    }
+    catch (err) {
+        res.status(500).json(err)
+    }
+};
+
+exports.getPostsByUserId = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        console.log(`Fetching posts for user ID: ${userId}`);
+        if (!userId) {
+            return res.status(400).json({ message: 'User ID is required' });
+        }
+        // Find posts by user ID
+        const posts = await Post.find({ userId: userId });
+        // if (posts.length === 0) {
+        //     console.log(`No posts found for user ID: ${userId}`);
+        // } else {
+        //     console.log(`Posts found: ${posts.length}`);
+        // }
+        res.json(posts);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
 
 

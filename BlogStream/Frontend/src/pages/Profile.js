@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 import { toast } from 'react-toastify';
 import ProfilePost from '../components/ProfilePost';
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
   const [posts, setPosts] = useState([]);
@@ -13,36 +14,52 @@ const Profile = () => {
   const { logout } = useContext(UserContext);
   const [user, setUser] = useState({});
 
-  // Fetch only posts created by the current user
+  // // Fetch only posts created by the current user
+  // const fetchPosts = async () => {
+  //   try {
+  //     const userData = JSON.parse(localStorage.getItem('user'));
+  //     if (userData) {
+  //       const res = await axios.get(`http://localhost:8000/api/all/posts`); // Fetch posts for the specific user
+  //       setPosts(res.data);
+  //       console.log(res.data);
+  //     }
+  //   } catch (err) {
+  //     console.log('Error fetching posts:', err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchPosts();
+  // }, []);
+  const { userId } = useParams(); // Get the user ID from the URL parameters
+
+  // Fetch posts for the specific user
   const fetchPosts = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem('user'));
       if (userData) {
-        const res = await axios.get(`http://localhost:8000/api/posts/user/${userData._id}`); // Fetch posts for the specific user
-        setPosts(res.data);
-        console.log(res.data);
+        setUser(userData);
+        console.log(userData);
       }
+      console.log(`Fetching posts for user ID: ${user._id}`);
+      const res = await axios.get(`http://localhost:8000/api/userpost/${user._id}/posts`); // Fetch posts by user ID
+      setPosts(res.data); // Set the posts state with the response data
+      console.log(res.data);    
     } catch (err) {
-      console.log('Error fetching posts:', err);
+      toast.error('Error fetching posts');
+      console.error(err);
     }
   };
 
   useEffect(() => {
     fetchPosts();
-  }, []);
-
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    if (userData) {
-      setUser(userData);
-    }
-  }, []);
+  }, [user._id]);
 
   const handleLogout = async () => {
     try {
       await axios.get('http://localhost:8000/api/logout');
       logout();
-      toast.success("User logout successfully");
+      toast.success("User logged out successfully");
       navigate('/login');
     } catch (err) {
       toast.error("Error while logging out");
@@ -53,7 +70,7 @@ const Profile = () => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:8000/api/user/${user._id}`, {
+      await axios.delete(`http://localhost:8000/api/user/${user._id}`, { // Correctly pass the user ID
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,6 +80,7 @@ const Profile = () => {
       setUser(null);
       toast.success("User deleted account successfully");
       navigate('/register');
+      window.location.reload(); // Reload the page after deletion
     } catch (err) {
       toast.error("Error while deleting the account");
       console.log(err);
@@ -106,7 +124,6 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <h5 className='card-title text-dark mb-4'>Recent Posts</h5>
         {posts.length > 0 && (  // Only display the Recent Posts section if there are posts
           <div className='col-12'>
             <div className='card shadow border-0 rounded-3'>

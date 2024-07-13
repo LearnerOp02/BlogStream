@@ -15,7 +15,7 @@ const Profile = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/all/posts');
+      const res = await axios.get(`http://localhost:8000/api/all/posts`);
       setPosts(res.data);
       console.log(res.data);
     } catch (err) {
@@ -38,7 +38,7 @@ const Profile = () => {
     try {
       await axios.get('http://localhost:8000/api/logout');
       logout();
-      toast.success("User logged out successfully");
+      toast.success("User logout successfully");
       navigate('/login');
     } catch (err) {
       toast.error("Error while logging out");
@@ -68,8 +68,8 @@ const Profile = () => {
   return (
     <div className='container my-5'>
       <div className='row'>
-        <div className='col-md-4'>
-          <div className='card shadow border-0 rounded-3'>
+        <div className='col-12'>
+          <div className='card shadow border-0 rounded-3 mb-4'>
             <div className='card-body text-center'>
               <div className='mb-3'>
                 <div className='rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto' style={{ width: '100px', height: '100px' }}>
@@ -102,15 +102,15 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className='col-md-8'>
+        <div className='col-12'>
           <div className='card shadow border-0 rounded-3'>
             <div className='card-body'>
               <h5 className='card-title text-dark mb-4'>Recent Posts</h5>
-              <ul className='list-group list-group-flush'>
+              <div className='d-flex flex-wrap'>
                 {posts.map((post) => (
                   <ProfilePost key={post._id} post={post} />
                 ))}
-              </ul>
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 const express = require('express');
 const Comment = require('../model/Comment');
-const verifyToken =require('../verifyToken');
+const verifyToken = require('../verifyToken');
 
 //Create
 exports.createcomment = (verifyToken, async (req, res) => {

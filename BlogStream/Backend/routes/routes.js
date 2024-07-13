@@ -3,7 +3,6 @@ const { register, login, logout, refetch } = require('../controller/auth');
 const { update, delete: deletePost, getposts, postdetails, userPosts, create, getAllPosts, getPostsByUserId } = require('../controller/post');
 const { createcomment, deletecomment, postcomment } = require('../controller/comment');
 const { updateuser, deleteuser, user } = require('../controller/user');
-const verifyToken = require('../verifyToken');
 const router = express.Router();
 
 // Auth routes
@@ -23,7 +22,7 @@ router.put('/:id', update);
 router.delete('/:id', deletePost);
 router.get('/:id', postdetails);
 router.get('/post/user/:userId', userPosts);
-router.get('/userpost/:userId/posts', getPostsByUserId);//
+router.get('/userpost/:userId/posts', getPostsByUserId);
 router.get('/all/posts', getAllPosts);
 
 // Comment routes

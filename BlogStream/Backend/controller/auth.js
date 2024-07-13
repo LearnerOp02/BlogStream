@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../model/User');
+const jwt = require('jsonwebtoken'); 
+
 
 // Register
 exports.register = async (req, res) => {
@@ -47,20 +49,19 @@ exports.logout = async (_req, res) => {
     }
 }
 
-const jwt = require('jsonwebtoken'); // Ensure jwt is imported correctly
 
 //REFETCH USER
 exports.refetch = async (req, res) => {
     const token = req.cookies.token;
     if (!token) {
-      return res.status(401).json({ message: 'No token provided' });
+        return res.status(401).json({ message: 'No token provided' });
     }
     jwt.verify(token, process.env.SECRET, {}, async (err, data) => {
-      if (err) {
-        return res.status(404).json(err);
-      }
-      res.status(200).json(data);
+        if (err) {
+            return res.status(404).json(err);
+        }
+        res.status(200).json(data);
     });
-  };
-  
+};
+
 

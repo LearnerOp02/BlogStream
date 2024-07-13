@@ -13,11 +13,15 @@ const Profile = () => {
   const { logout } = useContext(UserContext);
   const [user, setUser] = useState({});
 
+  // Fetch only posts created by the current user
   const fetchPosts = async () => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/all/posts`);
-      setPosts(res.data);
-      console.log(res.data);
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        const res = await axios.get(`http://localhost:8000/api/posts/user/${userData._id}`); // Fetch posts for the specific user
+        setPosts(res.data);
+        console.log(res.data);
+      }
     } catch (err) {
       console.log('Error fetching posts:', err);
     }
@@ -102,18 +106,21 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className='col-12'>
-          <div className='card shadow border-0 rounded-3'>
-            <div className='card-body'>
-              <h5 className='card-title text-dark mb-4'>Recent Posts</h5>
-              <div className='d-flex flex-wrap'>
-                {posts.map((post) => (
-                  <ProfilePost key={post._id} post={post} />
-                ))}
+        <h5 className='card-title text-dark mb-4'>Recent Posts</h5>
+        {posts.length > 0 && (  // Only display the Recent Posts section if there are posts
+          <div className='col-12'>
+            <div className='card shadow border-0 rounded-3'>
+              <div className='card-body'>
+                <h5 className='card-title text-dark mb-4'>Recent Posts</h5>
+                <div className='d-flex flex-wrap'>
+                  {posts.map((post) => (
+                    <ProfilePost key={post._id} post={post} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -128,7 +128,6 @@
 //     </div>
 //   );
 // };
-
 // export default CreatePost;
 import React, { useState, useContext } from 'react';
 import { ImCross } from 'react-icons/im';
@@ -143,7 +142,6 @@ const CreatePost = () => {
   const { user } = useContext(UserContext);
   const [cat, setCat] = useState("");
   const [cats, setCats] = useState([]);
-
   const navigate = useNavigate();
 
   const deleteCategory = (i) => {
@@ -166,16 +164,21 @@ const CreatePost = () => {
     };
 
     if (file) {
-      const data = new FormData();
-      const filename = Date.now() + file.name;
-      data.append("img", filename);
-      data.append("file", file);
-      post.photo = filename;
+      const data = new FormData()
+      const filename = Date.now() + file.name
+      data.append("img", filename)
+      data.append("file", file)
+      post.photo = filename
+      console.log(data)
 
       try {
-        await axios.post("http://localhost:8000/api/upload", data);
+        await axios.post("http://localhost:8000/api/upload", data, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
       } catch (err) {
-        console.log(err);
+        console.log("Error uploading file:", err);
       }
     }
 
@@ -183,7 +186,7 @@ const CreatePost = () => {
       const res = await axios.post("http://localhost:8000/api/create", post);
       navigate("/posts/post/" + res.data._id);
     } catch (err) {
-      console.log(err);
+      console.log("Error creating post:", err);
     }
   };
 
@@ -212,6 +215,7 @@ const CreatePost = () => {
           </div>
           <div className='mb-3'>
             <input
+              name='Image'
               onChange={(e) => setFile(e.target.files[0])}
               className='form-control py-1'
               type='file'

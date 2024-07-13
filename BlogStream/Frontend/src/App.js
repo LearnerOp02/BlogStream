@@ -17,6 +17,7 @@ import UserContextProvider from './context/UserContext';
 import EditProfile from './pages/EditProfile';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import Page404 from './pages/page404';
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
           <Route exact path='/contactus' element={<ContactUs />} />
           <Route exact path='/forgetpassword' element={<Forgetpass />} />
           <Route exact path='/editprofile' element={<EditProfile />} />
+          <Route path='*' element={<Page404/>}/>
         </Routes>
         <Footer />
       </UserContextProvider>

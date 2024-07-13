@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { BiEdit } from 'react-icons/bi';
 import { MdDelete } from 'react-icons/md';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate,Link } from 'react-router-dom';
 import Comment from '../components/Comment';
+import { IF } from '../url';
 
 const PostDetails = () => {
   const { id: postId } = useParams();
@@ -49,6 +50,10 @@ const PostDetails = () => {
 
   const postComment = async (e) => {
     e.preventDefault();
+    if (!user._id) {
+      navigate('/login');
+      return;
+    }
     try {
       await axios.post("http://localhost:8000/api/create/comment", {
         comment,
@@ -67,21 +72,23 @@ const PostDetails = () => {
     <div className="container mt-5">
       <div className="d-flex justify-content-between align-items-center">
         <h1 className="display-4" style={{ fontWeight: 'bold', fontFamily: 'Georgia, serif' }}>{post.title}</h1>
-        <div className="d-flex align-items-center">
-          <button onClick={() => navigate(`/edit/${postId}`)} className="btn btn-outline-primary mx-1" style={{ fontSize: '1.2rem' }}>
-            <BiEdit size={24} />
-          </button>
-          <button onClick={handleDeletePost} className="btn btn-outline-danger mx-1" style={{ fontSize: '1.2rem' }}>
-            <MdDelete size={24} />
-          </button>
-        </div>
+        {user._id && post.userId === user._id && (
+          <div className="d-flex align-items-center">
+            <button onClick={() => navigate(`/edit/${postId}`)} className="btn btn-outline-primary mx-1" style={{ fontSize: '1.2rem' }}>
+              <BiEdit size={24} />
+            </button>
+            <button onClick={handleDeletePost} className="btn btn-outline-danger mx-1" style={{ fontSize: '1.2rem' }}>
+              <MdDelete size={24} />
+            </button>
+          </div>
+        )}
       </div>
       <div className="d-flex justify-content-between mt-2">
         <p className="text-muted" style={{ fontSize: '1rem', fontStyle: 'italic' }}>@{post.username}</p>
         <p className="text-muted" style={{ fontSize: '1rem', fontStyle: 'italic' }}>{new Date(post.updatedAt).toDateString()}</p>
       </div>
       <img
-        src={post.photo}
+        src={IF + post.photo}
         className="img-fluid mt-4 rounded shadow-lg"
         alt="Post"
       />
@@ -115,17 +122,21 @@ const PostDetails = () => {
         {comments?.map((c) => (
           <Comment key={c._id} c={c} post={post} fetchPostComments={fetchPostComments} />
         ))}
-        <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center mt-4 mb-4">
-          <input
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="form-control mr-md-2 mb-2 mb-md-0"
-            type="text"
-            placeholder="Write a comment"
-            style={{ borderRadius: '30px', padding: '0.75rem 1.5rem' }}
-          />
-          <button onClick={postComment} type="button" className="btn btn-primary" style={{ borderRadius: '30px', padding: '0.75rem 2rem' }}>Add</button>
-        </div>
+        {user._id ? (
+          <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center mt-4 mb-4">
+            <input
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="form-control mr-md-2 mb-2 mb-md-0"
+              type="text"
+              placeholder="Write a comment"
+              style={{ borderRadius: '30px', padding: '0.75rem 1.5rem' }}
+            />
+            <button onClick={postComment} type="button" className="btn btn-primary" style={{ borderRadius: '30px', padding: '0.75rem 2rem' }}>Add</button>
+          </div>
+        ) : (
+          <p className="text-muted">Please <Link to="/login">log in</Link> to write a comment.</p>
+        )}
       </div>
     </div>
   );

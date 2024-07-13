@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { IF } from '../url';
 
 const ProfilePost = ({ post }) => {
   return (
     <div className='card card-single shadow-lg mx-4 my-3 single-card blog-card p-3 flex-1' style={{ width: '350px', borderRadius: '15px', overflow: 'hidden', border: '1px solid #ccc' }}>
       <div className="img-container d-flex" style={{ maxHeight: '150px', minHeight: '150px' }}>
-        <img src={post.image} alt="Blog Post" className="card-img-top" style={{ objectFit: 'cover', borderTopLeftRadius: '15px', borderTopRightRadius: '15px' }} />
+        <img src={IF+post.photo} alt="Blog Post" className="card-img-top" style={{ objectFit: 'cover', borderTopLeftRadius: '15px', borderTopRightRadius: '15px' }} />
       </div>
       <div className="card-body p-4">
         <p className="card-title text-dark title" style={{ fontSize: '22px', fontWeight: '700', marginBottom: '12px' }}>

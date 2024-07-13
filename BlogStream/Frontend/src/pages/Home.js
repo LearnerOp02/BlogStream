@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import HomePost from '../components/HomePost';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
+import { useLocation , Link} from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
 const Home = () => {
@@ -32,7 +32,10 @@ const Home = () => {
       </div>
       <div className='row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 justify-content-center'>
         {posts.map((post) => (
+          <>
+          <Link to={user?`/posts/post/${post._id}`:"/login"}></Link>
           <HomePost key={post._id} post={post} />
+          </>
         ))}
       </div>
     </div>

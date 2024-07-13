@@ -19,7 +19,7 @@ const Profile = () => {
   //   try {
   //     const userData = JSON.parse(localStorage.getItem('user'));
   //     if (userData) {
-  //       const res = await axios.get(`http://localhost:8000/api/all/posts`); // Fetch posts for the specific user
+  //       const res = await axios.get(http://localhost:8000/api/all/posts); // Fetch posts for the specific user
   //       setPosts(res.data);
   //       console.log(res.data);
   //     }
@@ -70,7 +70,7 @@ const Profile = () => {
   const handleDelete = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:8000/api/user/${user._id}`, { // Correctly pass the user ID
+      await axios.delete(`http://localhost:8000/api/user/${user._id}`,{ // Correctly pass the user ID
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -141,6 +141,5 @@ const Profile = () => {
       </div>
     </div>
   );
-};
-
+}
 export default Profile;

@@ -31,7 +31,7 @@ const Profile = () => {
   // useEffect(() => {
   //   fetchPosts();
   // }, []);
-  const { userId } = useParams(); // Get the user ID from the URL parameters
+  // const { userId } = useParams(); // Get the user ID from the URL parameters
 
   // Fetch posts for the specific user
   const fetchPosts = async () => {
